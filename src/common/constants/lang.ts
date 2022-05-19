@@ -47,6 +47,9 @@ export const USERINFO = {
     PHONE: 'phone',
     COURSE_NAME: 'course_name',
 };
+export const COURSEINFO = {
+    COURSE_NAME: 'course_name',
+}
 export const INPUT_MODULE = {
     SELECT_COURSE: 'select_course',
     SELECT_KNOWLEDGE_COURSE: 'select_knowledge_course',

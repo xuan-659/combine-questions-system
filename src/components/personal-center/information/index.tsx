@@ -35,8 +35,8 @@ export default class information extends mixins(Lang) {
     async created() {
         this.getUserInfo();
         await this.getCourseInfo().then((res: any) => {
+            console.log(res);
             const data:(ICourseData)[] = Array.from(res.data)
-        // this.CourseInfo.CourseInfo = res
             this.CourseInfo.push(...data)
             console.log(this.CourseInfo);
         })
