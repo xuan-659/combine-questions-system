@@ -6,13 +6,24 @@ import { PERSONAL_CENTER_BASE_ROUTE } from '@/common/constants';
 import { IFunctionItem } from '@/interfaces/compose-viewer';
 
 import './style.scss';
+import { Action, State } from 'vuex-class';
+import { IInformation } from '@/interfaces';
 
 @Component({
 
 })
 export default class personalViewer extends mixins(Lang) {
 
+    @Action("getUserInfo")
+    private getUserInfo!: () => void;
 
+    @State((state) => state.personalCenter.userInfo)
+    userInfo!: IInformation;
+
+    created() {
+        this.getUserInfo()
+    }
+    
     public isFold: boolean = false;
 
     public activeFunctionId: number = 0;
@@ -52,7 +63,7 @@ export default class personalViewer extends mixins(Lang) {
     }
 
     public renderMenu() {
-        return personalFunctionList.map(functionItem => {
+        return personalFunctionList.filter(item => item.roleId.includes(this.userInfo.roleId)).map(functionItem => {
             return (
                 functionItem.children ?
                 this.renderMenuChildren(functionItem, functionItem.children)

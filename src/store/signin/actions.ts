@@ -1,5 +1,6 @@
 import {
     INFINITY_TIME,
+    PERSONAL_CENTER_BASE_ROUTE,
     SESSION_ID_KEY
  } from '@/common/constants';
  import {
@@ -15,9 +16,47 @@ import { ISigninState } from './signin.interface';
 import { IRootState } from './../rootState.interface';
 import { ActionTree } from 'vuex';
 import * as types from './mutationTypes';
+import { personalFunctionList } from '@/common/mock/personal-center/function-list';
+import personalViewer from '@/components/personal-center';
+import { RouteConfig } from 'vue-router';
+import router from '@/router'
 
 const $http = new AJAX();
 const $storage = new Storage();
+//个人信息权限管理
+const updateRoute:(roleId: (0 | 1)) => Array<RouteConfig> =  function(roleId) {
+    return [{
+    path: '/personal-center',
+    redirect: () => {
+      const defaultComponent = personalFunctionList.find(item => item.default);
+      return PERSONAL_CENTER_BASE_ROUTE + defaultComponent?.path
+    }, 
+    component: personalViewer,
+    children: personalFunctionList.filter((item: any) => {
+        return item.roleId.includes(roleId)
+    }).map((item): RouteConfig => {
+      let res;
+      if(item.children) {
+        res = {
+          path: item.path,
+          component: item.component,
+          children: item.children.map((child): RouteConfig => {
+            return {
+              path: child.path,
+              component: child.component
+            }
+          }),
+        }
+      } else {
+        res = {
+          path: item.path,
+          component: item.component,
+        }
+      }
+      return res;
+    })
+  }]
+}
 
 export const actions: ActionTree<ISigninState, IRootState> = {
     handleInput(context, payload: { newModel: IBindUserInfo }) {
@@ -49,7 +88,10 @@ export const actions: ActionTree<ISigninState, IRootState> = {
         $storage.set(SESSION_ID_KEY, sessionId, INFINITY_TIME);
         if(res.status === HTTPCODE.SUCCESS) {
             // TODO: 处理跳转逻辑
-            console.log(res.data);
+            const res:any = await $http.get('/user/info');
+            const roleId: any = res.data.data.roleId;
+            console.log(roleId);
+            router.addRoutes(updateRoute(roleId))
         }
     },
 

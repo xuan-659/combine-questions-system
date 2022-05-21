@@ -1,10 +1,13 @@
+import { INFINITY_TIME, SESSION_ID_KEY } from "@/common/constants";
 import { IInformation, IUserInfoResponse } from "@/interfaces";
 import AJAX from "@/utlis/ajax";
 import { ActionTree } from "vuex";
 import { IRootState } from "../rootState.interface";
 import { IUserState } from "./personCenter.interface";
+import  Storage from "@/utlis/localStorage"
 
 const $http = new AJAX();
+const $storage = new Storage();
 
 export const actions: ActionTree<IUserState, IRootState> = {
     /** 获取用户信息
@@ -30,7 +33,9 @@ export const actions: ActionTree<IUserState, IRootState> = {
             userName:data.userName,
             courseName:data.courseName
         }
-        const res = await $http.post('/user/update/info', pramas);
+        const res: any = await $http.post('/user/update/info', pramas);
+        const sessionId = res.data.data
+        $storage.set(SESSION_ID_KEY, sessionId, INFINITY_TIME);
         console.log(res);
     },
 
@@ -119,7 +124,5 @@ export const actions: ActionTree<IUserState, IRootState> = {
         const res = await $http.post('/user/user-manage/update', courseInfo)
         return res.status
     }
-
-    
 }
 
