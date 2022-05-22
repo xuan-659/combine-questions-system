@@ -89,12 +89,7 @@ export default class AbilityInput extends mixins(Lang) {
             propInit: false,
             name: ''
         },
-        // {
-        //     type: ColumnTemType.TEXT,
-        //     prop: 'id',
-        //     propInit: 1,
-        //     name: '序号'
-        // },
+    
         {
             type: ColumnTemType.INPUT,
             prop: 'content',
