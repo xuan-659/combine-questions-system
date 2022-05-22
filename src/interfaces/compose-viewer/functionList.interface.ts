@@ -8,5 +8,5 @@ export interface IFunctionItem {
     icon: string;
     default?: boolean;
     children?: IFunctionItem[];
-    roleId: (0 | 1)[]
+    roleId?: (0 | 1)[]
 }
