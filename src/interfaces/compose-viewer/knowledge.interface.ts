@@ -42,6 +42,7 @@ export type KnowledegTableCheck=[
     // textTableConfig,
     textTableConfig,
     textTableConfig,
+    textTableConfig,
     textTableConfig
 ]
 /**

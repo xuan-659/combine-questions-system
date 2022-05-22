@@ -68,7 +68,13 @@ export default class AbilityCheck extends mixins(Lang) {
             propInit: 'hhh',
             name: '能力点重要程度',
            
-        }
+        },
+        {
+            type: ColumnTemType.TEXT,
+            prop: 'id',
+            propInit: 0,
+            name: '序号'
+        },
        
     ]
 

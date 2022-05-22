@@ -40,17 +40,7 @@ export const actions: ActionTree<IComposeState, IRootState> = {
         return res.status
      
     },
-    //  /**
-    //  * 
-    //  * 获取课程信息
-    //  */
-    //   async getCourseInfo() {
-    //     const res = await $http.get('/course/list');
-    //     console.log("rescourse:",res.data);
-        
-    //     return  res.data
-        
-    // },
+  
     async getKnowledgeData(context,courseId:number){
        
         const  res=await $http.get('/knowledge/listByCourseId',courseId)
@@ -63,5 +53,17 @@ export const actions: ActionTree<IComposeState, IRootState> = {
         console.log("abilitydata：",res);
         return res.data
         
-    }
+    },
+    async deleteKnowledge(context,knowledgeId:number){
+        const res = await $http.post('/ability/save',knowledgeId)
+        console.log("knowledgeId",knowledgeId);
+        console.log("res",res);
+        return res.status
+    },
+    async deleteAbility(context,abilityId:number){
+        const res = await $http.post('/ability/save',abilityId)
+        console.log("knowledgeId",abilityId);
+        console.log("res",res);
+        return res.status
+    },
 }

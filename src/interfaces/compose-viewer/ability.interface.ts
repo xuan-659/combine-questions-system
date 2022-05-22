@@ -62,6 +62,7 @@ export type AbilityTableCheck=[
     checkboxTableConfig,
     // textTableConfig,//序号
     textTableConfig,
+    textTableConfig,
     textTableConfig
 ]
 export enum AbilityType {

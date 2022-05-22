@@ -88,7 +88,14 @@ export default class KnowledgeCheck extends mixins(Lang) {
             name: '能力点内容',
       
         
-        }
+        },
+        {
+            type: ColumnTemType.TEXT,
+            prop: 'id',
+            propInit: 0,
+            name: '序号'
+        },
+        
        
     ]
 
