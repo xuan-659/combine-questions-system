@@ -3,7 +3,8 @@ import {
     textTableConfig,
     inputTableConfig,
     cascaderTableConfig,
-    selectTableConfig
+    selectTableConfig,
+    IBaseInterface
 } from '@/interfaces/common';
 
 export interface IKnowledgeItem {
@@ -14,7 +15,22 @@ export interface IKnowledgeItem {
     courseId: number | Array<number>;
   
     importance: 1 | 2 | 3 | 4 | 5;
+}//check用
+export interface IKnowledgeItem1 {
+
+    gmtCreate:null;
+    gmtModified:null;
+    knowledgeAbilityId:number;
+    knowledgeContent:string;
+    knowledgeCourseId:number;
+    knowledgeId:number;
+    knowledgeImportance:number;
+    
+    
+    
+   
 }
+
 
 export enum KnowledgeInputType {
     Single = 'single',
@@ -24,6 +40,7 @@ export enum KnowledgeInputType {
 export type KnowledegTableCheck=[
     checkboxTableConfig,
     // textTableConfig,
+    textTableConfig,
     textTableConfig,
     textTableConfig,
     textTableConfig
@@ -40,6 +57,9 @@ export type KnowledgeTableConfig = [
     
 ]
 
-export interface IKnowledge {
-    knowledgeInfo: IKnowledgeItem
+// export interface IKnowledge {
+//     knowledgeInfo: IKnowledgeItem1
+// }
+export interface compose{
+    knowledgeInfo: IKnowledgeItem1
 }

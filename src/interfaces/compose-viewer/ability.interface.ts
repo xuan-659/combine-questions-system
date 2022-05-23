@@ -7,13 +7,26 @@ import {
     selectTableConfig
 } from '@/interfaces/common';
 import { valueof } from '@/utlis/type';
+import { IKnowledgeItem1 } from './knowledge.interface';
 
 export interface IAbilityItem {
    
     content: string;
     importance:number;
-    relatedKnowledgeId:number[];
-    courseId:number
+    relatedKnowledgeId:IKnowledgeItem1[];
+    // courseId:number
+
+}
+export interface KnowledgeArray{
+    knowledgeId:number;
+    knowledgeContent:string;
+}
+export interface IAbilityItem1 {
+    abilityContent:string;
+    abilityCourseId:number;
+    abilityId:number;
+    abilityImportance:number;
+    knowledgeVOList:KnowledgeArray;
 
 }
 export interface RelatedKnowledgeItem {
@@ -49,6 +62,7 @@ export interface KnowType{
 export type AbilityTableCheck=[
     checkboxTableConfig,
     // textTableConfig,//序号
+    textTableConfig,
     textTableConfig,
     textTableConfig
 ]

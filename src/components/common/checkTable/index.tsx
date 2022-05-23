@@ -1,7 +1,7 @@
 /**
  * @description: 可修改的表格（添加数据使用）
  */
- import { Component, Prop, Emit } from 'vue-property-decorator';
+ import { Component, Prop, Emit, Watch } from 'vue-property-decorator';
  import { mixins } from 'vue-class-component';
  import { Action } from 'vuex-class';
  import Lang from '@/lang/lang';
@@ -14,8 +14,8 @@
  } from '@/common/constants';
  import { ITableConfig, ColumnTemType, ISelectItem } from '@/interfaces/common';
  import './style.scss';
- import { IKnowledgeItem, KnowledegTableCheck } from '@/interfaces/compose-viewer';
- import { IAbilityItem } from '@/interfaces/compose-viewer/ability.interface';
+ import { IKnowledgeItem, IKnowledgeItem1, KnowledegTableCheck } from '@/interfaces/compose-viewer';
+ import { IAbilityItem, IAbilityItem1 } from '@/interfaces/compose-viewer/ability.interface';
  import { IRefValidate } from '@/interfaces/common'
  import { validateInput } from '@/utlis';
 import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowledegCheck';
@@ -24,15 +24,47 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
  export default class CheckTable extends mixins(Lang) {
      @Prop()
      public courseId!: number;
+     @Prop()
+     public rowNum!: number;
+     @Prop()
+     public knowledgeList!:IKnowledgeItem1[];
+     @Watch('knowledgeList')
+     listchange(){
+        //  console.log("know:",this.knowledgeList);
+        console.log("mkjhgfd");
+        this.initRowDataList()
+        if(this. formDataStatus == false)
+        this.formDataStatus = true;
+        else{
+            this.formDataStatus=false;
+        }
+        // this.$forceUpdate();
+         
+     }
+     @Prop()
+     public abilityList!:IAbilityItem1[];
+     @Watch('abilityList')
+     abilitListchange(){
+        this.initRowDataList()
+        //  console.log("know:",this.knowledgeList);
+        // console.log("mkjhgfd");
+        if(this. formDataStatus == false)
+        this.formDataStatus = true;
+        else{
+            this.formDataStatus=false;
+        }
+        // this.$forceUpdate();
+         
+     }
+
+  
+  
 
      @Prop()
      public currentIndex: number=0;
 
      @Prop()
-     public rowNum: number=4;
- 
-     @Prop()
-     public tableConfig!: ITableConfig[];
+     public tableConfig!: ITableConfig[];//表格数据
 
 
   
@@ -58,8 +90,10 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
          // cascader focus 的时候获取相关数据
      }
  
-     @Action('submitKnowledgeData')
-     public submitBatchKnowledgeData!: (payload: { courseId: number, knowledgeList: Array<IKnowledgeItem> }) => Promise<boolean>
+     @Action('deleteKnowledge')
+     public DeleteKnowledge!: (knowledgeId: number) => Promise<boolean>
+     @Action('deleteAbility')
+     public DeleteAbility!: (abilityId: number) => Promise<boolean>
  
      @Action('submitAbilityData')
      public submitBathcAbilityData!: (payload: { courseId: number, abilityList: Array<IAbilityItem> }) => Promise<boolean>
@@ -69,70 +103,127 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
          addIcon: HTMLElement,
          batchRuleForm: IRefValidate
      }
- 
-     public get templateData() {
-         let obj: {[key: string]: any} = {};
-         this.tableConfig.forEach(config => {
-             obj[config.prop] = config.propInit;
-         });
-         return obj;
-     }
+     public  formDataStatus = false
+   
+     
+    public get templateData() {
+        let obj: {[key: string]: any} = {};
+        this.tableConfig.forEach(config => {
+            obj[config.prop] = config.propInit;
+        });
+        console.log("tablecondif:",this.tableConfig);
+        
+        console.log(obj);
+        
+        return obj;
+    }
+
+    // public rowDataList: any[] = new Array({...this.templateData});
+    public rowDataList: any[] =[]
+    
  
      public isAddButtonActive: boolean = false;
- 
-     public rowDataList: any[] = new Array({...this.templateData});
-     //
 
+    //  public rowDataList: any[] = new Array({...this.templateData});
+     
      private KnowledgeInfo: (KnowledegTableCheck)[] = [
         
     ];
 
-     @Action("getKnowledgeInfo")
-     private getKnowledgeInfo!: () => any;
-     
-    @Action('getAbilityInfo')
-    private getAbilityInfo!: () => any;
 
+     @Action("getKnowledgeData")
+     private getKnowledgeData!: () => any;
+     
+    @Action('getAbilityData')
+    private getAbilityData!: () => any;
+    public selectProp:any;
      async created() {
-        // this.getUserInfo();
-        await this.getKnowledgeInfo().then((res: any) => {
-            const data:(KnowledegTableCheck)[] = Array.from(res.data)
-        // this.CourseInfo.CourseInfo = res
-            this.KnowledgeInfo.push(...data)
-            console.log(this.KnowledgeInfo);
-        })
+         //判断是能力点还是知识点
+        this.selectProp = this.tableConfig.find(config => config.name === '能力点重要程度');
+        console.log("类型",this.selectProp);
+        // this.templateData();
+        // console.log(":templateData:",this.templateData);
+        // console.log(this.tableConfig);
         
-        console.log("created");
+        // this.rowDataList=new Array({...this.templateData});
+        // console.log("rowdata:",this.rowDataList);//rowDataList里面存的是表的模板，包括表的列的名称以及初始值
+        
     }
-//
- 
-    //  public currnentIndex:number = 0;
-    //  public rowNum:number = 4;
-  
-    tableData:Array<any>= [{
-        text:'hhhhhh',
-        importance:'1',
-        relatedAbility:'网络'
-       
-      }, {
-        text:'hhhhhh',
-        importance:'1',
-        relatedAbility:'网络'
-      }, {
-        text:'hhhhhh',
-        importance:'1',
-        relatedAbility:'网络'
-       
-      }, {
-        text:'hhhhhh',
-        importance:'1',
-        relatedAbility:'网络'
-       
-      }]
-     public deleteSelectedRows() {
+
+    public async deleteBatch(){
+        this.rowDataList.map((rowData:any,index)=>{
+            console.log("hhhhhhhhhhh");
+            console.log("rowdata:",rowData);
+            
+            if(rowData.isCheck===true)
+            {
+                console.log("1");
+                
+                if(this.selectProp==undefined)
+               
+                
+                this.DeleteKnowledge(this.knowledgeList[rowData.id].knowledgeId).then((state)=>{
+                    console.log("2");
+                    console.log("rowid:",rowData.id);
+                    
+                    console.log("id:",this.knowledgeList[rowData.id].knowledgeId);
+                    
+                    console.log(index,state);
+                    
+                })
+                else
+                this.DeleteAbility(this.abilityList[rowData.id].abilityId).then((state)=>{
+                    // console.log(state);
+                    console.log("rowid:",rowData.id);
+                    
+                    console.log("id:",this.abilityList[rowData.id].abilityId);
+                    
+                    console.log(index,state);
+                    
+                })
+            }
+      })
+      var x=1
+         return  x
+    }
+//为啥这里.then函数不能在deleteBatch()执行完后在执行呢，先执行alert了
+     public async deleteSelectedRows() {
+         await this.deleteBatch().then((x:any)=>{
+            //  console.log("x:",x);
+             
+                   alert("删除成功！")
+                //    location.reload();
+         })
          this.rowDataList = this.rowDataList.filter(rowData => {
              return rowData.isCheck === false;
          })
+    //   this.rowDataList.map((rowData:any,index)=>{
+    //           if(rowData.isCheck===true)
+    //           {
+    //               if(this.selectProp==undefined)
+    //               this.DeleteKnowledge(rowData.knowledgeId).then((state)=>{
+                    
+    //                 //   if(state){
+    //                 //        alert("删除成功！")
+    //                 //        location.reload()
+    //                 //   }
+                      
+    //               })
+    //               else
+    //               this.DeleteAbility(rowData.abilityId).then((state)=>{
+                      
+                      
+    //                 //   if(state){
+    //                 //        alert("删除成功！")
+    //                 //        location.reload()
+    //                 //   }
+                      
+    //               })
+    //           }
+    //     })
+    //         alert("删除成功！")
+    //         location.reload();
+      
      }
  
      public handleSelectAll() {
@@ -142,6 +233,7 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
      }
  
      public handleAddIconClick() {
+        
         // 推入一个深拷贝，否则会修改一个导致所有的都发生变化
         this.rowDataList.push({
             ...this.templateData,
@@ -152,17 +244,16 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
    
     //初始化rowdataList
     public initRowDataList(){
-        // this.tableData.map((Data, index) => {
-        // //    this.handleAddIconClick()
-        // //    this.currnentIndex++
-        // })
-        // console.log("cuhhhhhhhhhhhhhhhhh:",this.currentIndex,this.rowNum);
+      
+        this.rowDataList=[];
+        this.rowDataList=new Array({...this.templateData})
+        console.log("rowList",this.rowDataList);
+        
+
+        // console.log("initrow:",this.rowNum);
+        
         for(var i=0;i<this.rowNum-1;i++){
-            this.handleAddIconClick()
-           
-           console.log(i);
-           
-          
+            this.handleAddIconClick()  
             
         }
     }
@@ -203,126 +294,99 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
             </div>
         )
     }
-    //   public getColumnTemplateHead(config: ITableConfig, data: any, index: number) {
-    //     const { type, placeholder: hint, prop } = config;
-    //    if(index===0){
-    //        return (
-    //            <el-form-item class="item_checkbox"prop={prop}>
-    //                <el-checkbox  v-model={data[prop]}/>
-    //            </el-form-item>
-    //        )
-    //    }
-    //    else if(index===1){
-       
-    //             return <el-form-item prop={prop} class='row-item row-item__text'>{this.tableConfig[1][prop]}</el-form-item>;
-           
-    //            }
-    //    else if(index===2){
-          
-    //            return <el-form-item prop={prop} class='row-item row-item__text1'>{}</el-form-item>;
-              
-    //    }  
-    // }
+   
 
      public getColumnTemplate(config: ITableConfig, data: any, index: number,index1:number) {
          const { type, placeholder: hint, prop } = config;
-         
+        //  console.log("index1:",index1,"knowlist",this.knowledgeList[index1].knowledgeContent);
+         var kcontent=0;
+        
          
         if(index===0){
             return (
+                
                     <el-form-item prop={prop}>
                         <el-checkbox class="item_checkbox" v-model={data[prop]}/>
                     </el-form-item>
             )
-        }
-        else if(index===1){
+        }//接口的属性顺序要与返回的一致
         
-                 return <el-form-item prop={prop} class='row-item row-item__text'>{this.tableData[index1].text}</el-form-item>;
+        
+        else if(index===1){
+            if(this.selectProp==undefined){
+                // return <div>{this.formDataStatus}</div>
+              
+                // console.log("return这一句的上面打印这个knowledgeContent:",this.knowledgeList[index1].knowledgeContent);
+                // this.$forceUpdate()
+                 return <el-form-item  prop={prop} class='row-item row-item__text'>{this.knowledgeList[index1].knowledgeContent}</el-form-item>;
             
-                }
+            }
+            else{
+                return <el-form-item prop={prop} class='row-item row-item__text'>{this.abilityList[index1].abilityContent}</el-form-item>;
+            }}
         else if(index===2){
+            if(this.selectProp==undefined){
+                return <el-form-item prop={prop} class='row-item row-item__text1'>{this.knowledgeList[index1].knowledgeImportance}</el-form-item>;
+            }else{
+                return <el-form-item prop={prop} class='row-item row-item__text1'>{this.abilityList[index1].abilityImportance}</el-form-item>;
+            }
            
-                return <el-form-item prop={prop} class='row-item row-item__text1'>{this.tableData[index1].importance}</el-form-item>;
                
         }  
          else if(index===3){
-           
-            return <el-form-item prop={prop} class='row-item row-item__text2'>{this.tableData[index1].relatedAbility}</el-form-item>;
-           
+            if(this.selectProp==undefined){
+            return <el-form-item prop={prop} class='row-item row-item__text2'>{this.knowledgeList[index1].knowledgeAbilityId}</el-form-item>;
+            }
     }  
 
      }
  
      public renderTableList1(){
-         
+        
+        // this.$forceUpdate();
+        // console.log("rowNum:",this.rowNum);
+        
+        //  console.log("rowdata:",this.rowDataList);
          
         // this.initRowDataList()
-        return this.rowDataList.map((rowData, index) => {
-           let index1=index
+        return this.rowDataList.map((rowData:any, index:number) => {
+           let index1=index//行
+            // console.log("knowlistL",this.knowledgeList);
             
-         console.log(index1);
+        //  console.log("index1:",index1,"knowlist:",this.knowledgeList[index1].knowledgeContent);
+        //  console.log("rowdata:",this.rowDataList);
+         
             
             return (
+                
                 <el-form
                     class='table-row__item'
                     key={index1}
                     ref='batchRuleForm'
                     rules={this.rules}
+                   
                     {...{ props: { model: rowData } }}
                 >
                     {
+                        // console.log("list1",this.knowledgeList);
+                        
                         this.tableConfig.map((columnConfig,index) => {
                             return this.getColumnTemplate(columnConfig, rowData, index,index1)
                         })
                     }
                 </el-form>
+               
             )
         })
      }
-     public renderTableList(index1:number) {
-      
-        return this.rowDataList.map((rowData, index) => {
-            let index2=index
-            console.log(index);
-            
-            return (
-                <el-form
-                    class='table-row__item'
-                    key={index}
-                    ref='batchRuleForm'
-                    rules={this.rules}
-                    {...{ props: { model: rowData } }}
-                >
-                    {
-                        this.tableConfig.map((columnConfig,index) => {
-                            return this.getColumnTemplate(columnConfig, rowData, index,index1)
-                        })
-                    }
-                </el-form>
-            )
-        })
-            // return (
-            //     <el-form
-            //         class='table-row__item'
-            //         key={index1}
-            //         ref='batchRuleForm'
-            //         rules={this.rules}
-                   
-            //     >
-            //         {
-            //             this.tableConfig.map((columnConfig,index) => {
-            //                 return this.getColumnTemplate(columnConfig, '', index,index1)
-            //             })
-            //         }
-            //     </el-form>
-            // )
-       
-    }
+   
  
      public mounted() {
         //  this.listenEnterKeyDown();
         
-         this.initRowDataList()
+        //  this.initRowDataList()
+        // console.log("datalist:",this.rowDataList);
+        
         //  console.log("cuhhhhhhhhhhhhhhhhh:",this.currnentIndex);
      }
  
@@ -343,22 +407,13 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
                  </div>
                  <div class='table-body'>
                      { this.renderTableHeader() }
-                     <div class='table-row_list'>   
+                     <div class='table-row_list' key={this.formDataStatus}>   
                      { 
                     
                      
-                     this.renderTableList1()
+                     this.renderTableList1()//渲染出表格
 
                      }                              
-            {/* {this.tableData.map((item,index) => {
-					//console.log(item);
-					
-  					return (
-                        this.renderTableList(index)
-                       
-  );
-})}  */}
-                         {/* { this.renderTableRow() } */}
                      </div>
                  </div>
             
