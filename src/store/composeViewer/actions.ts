@@ -56,16 +56,16 @@ export const actions: ActionTree<IComposeState, IRootState> = {
         return res.data
         
     },
-    async deleteKnowledge(context,knowledgeId:number){
+    async deleteKnowledge(context,knowledgeId:number[]){
         const res = await $http.post('/ability/save',knowledgeId)
         console.log("knowledgeId",knowledgeId);
         console.log("res",res);
-        return res.status
+        return res
     },
-    async deleteAbility(context,abilityId:number){
+    async deleteAbility(context,abilityId:number[]){
         const res = await $http.post('/ability/save',abilityId)
         console.log("knowledgeId",abilityId);
         console.log("res",res);
-        return res.status
+        return res
     },
 }
