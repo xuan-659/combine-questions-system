@@ -16,7 +16,8 @@ export const personalFunctionList: IFunctionItem[] = [
         icon: 'icon-zujuan',
         path: 'information',
         component: information,
-        default: true
+        default: true,
+        roleId: [0, 1]
     },
     {
         id: 1,
@@ -24,6 +25,7 @@ export const personalFunctionList: IFunctionItem[] = [
         icon: 'icon-zujuan',
         path: 'person-manage',
         component: personManage,
+        roleId: [1],
     },
     {
         id: 2,
@@ -31,5 +33,6 @@ export const personalFunctionList: IFunctionItem[] = [
         icon: 'icon-zujuan',
         path:'course-manage',
         component: courseManage,
+        roleId: [1],
     }
 ]

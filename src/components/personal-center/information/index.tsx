@@ -22,9 +22,6 @@ export default class information extends mixins(Lang) {
     private CourseInfo: (ICourseData)[] = [
         
     ];
- 
-    @Action("getUserInfo")
-    private getUserInfo!: () => void;
 
     @Action("changeUserInfo")
     private changeUserInfo!: (userInfo: IInformation) => string;
@@ -33,10 +30,9 @@ export default class information extends mixins(Lang) {
     private getCourseInfo!: () => any;
 
     async created() {
-        this.getUserInfo();
         await this.getCourseInfo().then((res: any) => {
+            console.log(res);
             const data:(ICourseData)[] = Array.from(res.data)
-        // this.CourseInfo.CourseInfo = res
             this.CourseInfo.push(...data)
             console.log(this.CourseInfo);
         })

@@ -49,45 +49,6 @@ const routes: Array<RouteConfig> = [
       return res;
     })
   },
-  // {
-  //   path: '/personal-center',
-  //   component: personalViewer,
-  //   children: [
-  //     {
-  //       path: 'information',
-  //       component: information
-  //     }
-  //   ]
-  // },
-  {
-    path: '/personal-center',
-    redirect: () => {
-      const defaultComponent = personalFunctionList.find(item => item.default);
-      return PERSONAL_CENTER_BASE_ROUTE + defaultComponent?.path
-    }, 
-    component: personalViewer,
-    children: personalFunctionList.map((item): RouteConfig => {
-      let res;
-      if(item.children) {
-        res = {
-          path: item.path,
-          component: item.component,
-          children: item.children.map((child): RouteConfig => {
-            return {
-              path: child.path,
-              component: child.component
-            }
-          }),
-        }
-      } else {
-        res = {
-          path: item.path,
-          component: item.component,
-        }
-      }
-      return res;
-    })
-  },
   {
     path: '/',
     redirect: '/main',
