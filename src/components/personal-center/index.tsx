@@ -49,7 +49,7 @@ export default class personalViewer extends mixins(Lang) {
         } else {
             this.activeSubFuncId = -1;
             this.activeFunctionId = id;
-            const functionItem = personalFunctionList.find(item => item.id === id);
+            const functionItem = personalFunctionList.find((item: any) => item.id === id);
             if(functionItem) {
                 const path = PERSONAL_CENTER_BASE_ROUTE + functionItem.path;
                 if(!parentId) {
