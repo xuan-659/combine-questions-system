@@ -31,29 +31,41 @@ export const actions: ActionTree<IComposeState, IRootState> = {
         
         return true;
     },
-    async submitAbilityData(context, payload: { abilityItem: IAbilityItem }) {
+    async submitAbilityData(context, payload: { courseId:number,abilityItem: IAbilityItem }) {
         // 能力点录入
       
         const res = await $http.post('/ability/save',payload)
-        console.log("data:",payload);
+        console.log("id:",payload.abilityItem);
+        console.log("ability:",payload.courseId);
+        
         console.log("res",res);
         return res.status
      
     },
-     /**
-     * 
-     * 获取课程信息
-     */
-      async getCourseInfo() {
-        const res = await $http.get('/course/list');
-        console.log("rescourse:",res.data);
-        
-        return  res.data
+  
+    async getKnowledgeData(context,courseId:number){
+       
+        const  res=await $http.get('/knowledge/listByCourseId',courseId)
+        console.log("knowledgedata：",res);
+        return res.data
         
     },
-    async getKnowledgeData(){
-        const  res=await $http.get('/knowledge/listByCourseId')
-        console.log("knowledgedata：",res);
+    async getAbilityData(){
+        const  res=await $http.get('/ability/listByCourseId')
+        console.log("abilitydata：",res);
+        return res.data
         
-    }
+    },
+    async deleteKnowledge(context,knowledgeId:number){
+        const res = await $http.post('/ability/save',knowledgeId)
+        console.log("knowledgeId",knowledgeId);
+        console.log("res",res);
+        return res.status
+    },
+    async deleteAbility(context,abilityId:number){
+        const res = await $http.post('/ability/save',abilityId)
+        console.log("knowledgeId",abilityId);
+        console.log("res",res);
+        return res.status
+    },
 }
