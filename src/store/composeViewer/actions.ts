@@ -37,5 +37,6 @@ export const actions: ActionTree<IComposeState, IRootState> = {
     async submitAbilityData(context, payload: { abilityList: Array<IAbilityItem> }) {
         // 能力点录入
 
-    }
+    },
+    
 }
