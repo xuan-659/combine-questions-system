@@ -31,11 +31,13 @@ export const actions: ActionTree<IComposeState, IRootState> = {
         
         return true;
     },
-    async submitAbilityData(context, payload: { abilityItem: IAbilityItem }) {
+    async submitAbilityData(context, payload: { courseId:number,abilityItem: IAbilityItem }) {
         // 能力点录入
       
         const res = await $http.post('/ability/save',payload)
-        console.log("data:",payload);
+        console.log("id:",payload.abilityItem);
+        console.log("ability:",payload.courseId);
+        
         console.log("res",res);
         return res.status
      

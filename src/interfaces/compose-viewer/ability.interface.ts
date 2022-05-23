@@ -7,13 +7,14 @@ import {
     selectTableConfig
 } from '@/interfaces/common';
 import { valueof } from '@/utlis/type';
+import { IKnowledgeItem1 } from './knowledge.interface';
 
 export interface IAbilityItem {
    
     content: string;
     importance:number;
-    relatedKnowledgeId:number[];
-    courseId:number
+    relatedKnowledgeId:IKnowledgeItem1[];
+    // courseId:number
 
 }
 export interface KnowledgeArray{
