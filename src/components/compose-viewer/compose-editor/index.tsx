@@ -18,6 +18,8 @@ import {
     NEXT_STEP,
     FINISH_EDIT
 } from '@/common/constants/lang';
+import ListTransfer from './listTransfer';
+import { Action } from 'vuex-class';
 
 @Component({
     components: {
@@ -25,12 +27,41 @@ import {
         KnowledgeEditor,
         CapacityEditor,
         QuestionEditor,
-        EditorSwitch
+        EditorSwitch,
+        ListTransfer
     }
 })
 export default class ComposeEditor extends mixins(Lang) {
 
-    public activeStep: number = 1;
+    public activeStep: number = 0;
+
+    @Action('composeTestPaper')
+    public composeTestPaper!: (data: any) => any
+
+    public composeTestPaperData: any = {
+        courseId: '',
+        paperDifficulty: '',
+        questionTypeList: [],
+        abilityIdList: [],
+        knowledgeIdList:[]
+    }
+
+    public changeBasicData(data: any) {
+        this.composeTestPaperData.courseId = Number(data.courseId),
+        this.composeTestPaperData.paperDifficulty = Number(data.paperDifficulty)
+    }
+
+    public changeKnowledge(data: any) {
+        this.composeTestPaperData.knowledgeIdList.push(...data)
+    }
+
+    public changeAbility(data: any) {
+        this.composeTestPaperData.abilityIdList.push(...data)
+    }
+
+    public changeQuestionTypeList(data: any) {
+        this.composeTestPaperData.questionTypeList = data
+    }
 
     public readonly stepLength: number = 4;
 
@@ -43,10 +74,14 @@ export default class ComposeEditor extends mixins(Lang) {
         console.log(EditorNameMap[componentName]);
         return h(this.$options.components![componentName], {
             props: {
-                title: EditorNameMap[componentName]
+                title: EditorNameMap[componentName],
+                composeTestPaperData: this.composeTestPaperData
             },
             on: {
-
+                "changeBasicData": this.changeBasicData,
+                "changeKnowledge": this.changeKnowledge,
+                "changeAbility": this.changeAbility,
+                "changeQuestionTypeList": this.changeQuestionTypeList
             }
         })
     }
@@ -62,6 +97,7 @@ export default class ComposeEditor extends mixins(Lang) {
     public handleFinishEdit() {
         console.log('完成编辑');
         this.activeStep = this.stepLength;
+        this.composeTestPaper(this.composeTestPaperData)
     }
 
     public renderEditorSwitchComponent(h: CreateElement) {

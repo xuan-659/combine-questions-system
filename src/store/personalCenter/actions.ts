@@ -124,6 +124,20 @@ export const actions: ActionTree<IUserState, IRootState> = {
      async deleteCourse(context, courseInfo) {
         const res = await $http.post('/user/user-manage/update', courseInfo)
         return res.status
+    },
+
+    // composeTestPaper
+    /** 组卷
+     * 
+     * @param context 
+     * @param paperInfo  课程信息 
+     * @returns 
+     */
+     async composeTestPaper(context, paperInfo) {
+        const res = await $http.post('/question/compose', paperInfo)
+        console.log(res.data);
+        
+        return res.data
     }
 }
 

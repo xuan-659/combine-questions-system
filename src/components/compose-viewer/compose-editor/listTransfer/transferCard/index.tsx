@@ -51,9 +51,16 @@ export default class TransferCard extends mixins(Lang) {
     @Emit('transferItemAdd')
     public handleTransferItemAdd(item: number | ITransferDataItem[]) {}
 
+    @Emit('transferItemSave')
+    public transferItemSave() {
+        return this.questionTypeList
+    }
+
     public get dataSourceModel() {
         return [ ...this.dataSource ]
     }
+
+    public questionTypeList:any = []
 
     public get searchResult() {
         return this.dataSourceModel.filter(item => {
@@ -99,8 +106,16 @@ export default class TransferCard extends mixins(Lang) {
         }
     }
 
+    public questionItem = {
+        questionType: 0,
+        questionCount: 0
+    }
+
     public handleTransferItemEdit(index: number) {
         this.editTransferTargetItem = this.dataSource[index];
+        this.questionItem.questionType = this.editTransferTargetItem.id;
+        console.log(this.questionItem.questionType);
+        
         this.isRenderDialog = true;
         this.isDialogVisible = true;
     }
@@ -112,25 +127,53 @@ export default class TransferCard extends mixins(Lang) {
                 config: this.dialogConfig,
                 dataSource: [{
                     label: '题目数量',
-                    placeholder: '输入此类题目数量'
+                    placeholder: '输入此类题目数量',
+                    value: ""
                 }, {
-                    label: '单个题目分值',
-                    hint: '对于填空题为每一空的分值',
-                    placeholder: '输入此类题目单个分值'
+                    label: '题目总分值',
+                    hint: '题目总分值',
+                    placeholder: '输入此类题目总分值',
+                    value: ""
                 }]
             },
             on: {
-                closeDialog: this.closeDialog
+                closeDialog: this.closeDialog,
+                confirm: this.confirm
             }
         })
     }
 
-    public handleTargetTransferSave() {
-
+    public handleTargetTransferSave() {   
+        this.transferItemSave();
     }
 
     public closeDialog() {
         this.isDialogVisible = false;
+    }
+
+    beforeDestroy() {
+
+    }
+
+    public confirm(val: any) {
+        console.log("val",val);
+        let has = false;
+        this.questionItem.questionCount = val.count;
+        for(let i = 0; i < this.questionTypeList.length; i++) {
+            if(this.questionItem.questionType == this.questionTypeList[i].questionType) {
+                this.questionTypeList.questionCount = this.questionItem.questionCount;
+                has = true;
+                break;
+            }
+        }
+        if(!has) {
+            this.questionTypeList.push({
+                questionType:Number(this.questionItem.questionType),
+                questionCount:Number(this.questionItem.questionCount)
+            })
+            
+        }
+        
     }
 
     /**

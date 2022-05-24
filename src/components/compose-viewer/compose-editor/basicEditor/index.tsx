@@ -7,6 +7,7 @@ import {
 } from '@/interfaces/compose-viewer';
 
 import './style.scss';
+import { Action } from 'vuex-class';
 
 @Component({
     
@@ -16,11 +17,29 @@ export default class BasicEditor extends mixins(Lang) {
     @Prop()
     public title!: keyof typeof EditorIndexMap;
 
+    @Action('getCourseInfo')
+    private getCourseInfo!: () => any;
+
+    @Emit("changeBasicData")
+    public changeBasicData() {
+        return this.baseEditInfo
+    }
+
+    public courseInfo: any = []
+
     public baseEditInfo = {
-        courseCode: '',
-        courseName: '',
-        paperScore: 100,
+        courseId: '',
         paperDifficulty: null
+    }
+
+    async created() {
+        await this.getCourseInfo().then((res: any) => {
+            this.courseInfo.push(...Array.from(res.data))
+        })
+    }
+
+    beforeDestroy() {
+        this.changeBasicData()
     }
 
     render() {
@@ -33,19 +52,22 @@ export default class BasicEditor extends mixins(Lang) {
                     <el-form
                         label-position="right"
                         label-width='120px'
-                        { ...{ props: { ...this.baseEditInfo } } }
+                        props={{
+                            model: this.baseEditInfo
+                        }}
                     >
-                        <el-form-item label={this.t(BaseEditorOperations.COURSE_CODE_SELECT)}>
-                            <el-select v-model={this.baseEditInfo.courseCode}></el-select>
-                        </el-form-item>
                         <el-form-item label={this.t(BaseEditorOperations.COURSE_NAME_SELECT)}>
-                            <el-select v-model={this.baseEditInfo.courseName}></el-select>
-                        </el-form-item>
-                        <el-form-item label={this.t(BaseEditorOperations.PAPER_SCORE_INPUT)}>
-                            <el-input
-                                placeholder='请输入试卷总分数'
-                                v-model={this.baseEditInfo.paperScore}
-                            ></el-input>
+                            <el-select v-model={this.baseEditInfo.courseId}>
+                                {this.courseInfo.map((item:any) => {
+                                    return (
+                                        <el-option
+                                         key={item.courseId}
+                                         label={item.courseName}
+                                         value={item.courseId}
+                                        ></el-option>
+                                    )
+                                })}
+                            </el-select>
                         </el-form-item>
                         <el-form-item label={this.t(BaseEditorOperations.PAPER_DIFFICULTY_SELECT)}>
                             <el-rate v-model={this.baseEditInfo.paperDifficulty}></el-rate>

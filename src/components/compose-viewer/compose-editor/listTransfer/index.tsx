@@ -1,5 +1,5 @@
 import { CreateElement } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Emit } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 import Lang from '@/lang/lang';
 import TransferCard from './transferCard';
@@ -18,6 +18,14 @@ import { getQuestionTypes } from '@/utlis';
 })
 export default class ListTransfer extends mixins(Lang) {
 
+    @Emit("changeQuestionTypeList")
+    public changeQuestionTypeList(val: any){
+        console.log('save');
+        console.log(val);
+        
+        return val
+    }
+
     public transferSourceData: ITransferDataItem[] = [];
 
     public transferTargetData: ITransferDataItem[] = [];
@@ -33,9 +41,14 @@ export default class ListTransfer extends mixins(Lang) {
             },
             on: {
                 transferItemDelete: this.deleteTransferItem,
-                transferItemAdd: this.addTransferItem
+                transferItemAdd: this.addTransferItem,
+                transferItemSave: this.saveTransferItem
             }
         })
+    }
+
+    public saveTransferItem(val: any ) {
+        this.changeQuestionTypeList(val)
     }
 
     /**
@@ -64,7 +77,7 @@ export default class ListTransfer extends mixins(Lang) {
     }
 
     mounted() {
-        this.transferSourceData = [...getQuestionTypes()];
+        this.transferSourceData = [...getQuestionTypes()];   
     }
 
     render(h: CreateElement) {

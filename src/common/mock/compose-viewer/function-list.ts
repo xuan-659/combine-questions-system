@@ -38,13 +38,13 @@ export const teacherFunctionList: IFunctionItem[] = [
         path: 'question-manage',
         component: QuestionManage
     },
-    {
-        id: 2,
-        func: PAPER_MANAGE,
-        icon: 'icon-shijuanguanli',
-        path: 'paper-manage',
-        component: PaperManage
-    },
+    // {
+    //     id: 2,
+    //     func: PAPER_MANAGE,
+    //     icon: 'icon-shijuanguanli',
+    //     path: 'paper-manage',
+    //     component: PaperManage
+    // },
     {
         id: 3,
         func: QUESTION_INPUT,
