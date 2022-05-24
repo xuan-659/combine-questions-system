@@ -71,6 +71,7 @@ export default class QuestionInput extends mixins(Lang) {
     public data:any ={
         list:[1,2,3,4],
         file:[],
+        answerfile:[],
     }
 
     public questionData: IQuestionItem = {
@@ -126,9 +127,37 @@ export default class QuestionInput extends mixins(Lang) {
         console.log(file)
         console.log(this.data.file)
     }
+
+    public upload_anwserimg(item:any){
+        this.data.answerfile.push(item.file)
+    }
+
+    public remove_anwserimg(file:any,fileList:any){
+          this.data.answerfile=this.data.file.filter((item:any)=>{
+              console.log(item.name)
+              return item.name !=file.name
+          })
+    }
     public test_aa(){
         console.log('aaa')
         console.log(this.data.file)
+    }
+    public sendmassge(){
+        var data ={
+            questionDifficulty:this.questionData.questionDifficulty,
+            questionType:this.questionData.questionTypeId,
+            questionContent:'$'+this.questionData.questionContent+'$',
+            optionListJson:this.questionData.questionContentChoice.map(item=>{
+                return '$'+item+'$'
+            }),
+            questionPictureFile:this.data.file,
+            answer:'$'+this.questionData.questionAnswer+'$',
+            answerPictureFile:this.data.anwswefile,
+            knowledgeIdListJson:this.questionData.knowledgeIdList,
+            questionAbilityId:this.questionData.abilityIdList,
+            questionCourseId:this.questionData.courseId
+        }
+        send.submitTestData(data)
     }
 
     public addSubQuesContent() {
@@ -140,6 +169,7 @@ export default class QuestionInput extends mixins(Lang) {
     }
 
     public clearPreview() {
+        console.log(this.$refs.typesetElement)
         Array.from(this.$refs.typesetElement.children).forEach(child => {
             child.innerHTML = '';
         })
@@ -293,6 +323,26 @@ export default class QuestionInput extends mixins(Lang) {
             </el-tooltip>
             { this.answerTemplate() }
         </el-form-item>
+        
+    }
+    public renderQuestionImg(){
+        return(
+            <el-form-item class='question-flex' label='输入答案图片'>
+                    {/* <el-input
+                        placeholder={this.t(INPUT_IMG_URL)}
+                        v-model={this.questionData.questionContentSupplement}
+                    /> */}
+                <el-upload
+                 class="avatar-uploader"
+                 action="#"
+                 http-request={this.upload_img}
+                 before-remove={this.remove_img}
+                >
+                    
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+                </el-form-item>
+        )
     }
 
     public answerTemplate() {
@@ -332,6 +382,7 @@ export default class QuestionInput extends mixins(Lang) {
             this.renderQuestionContent(),
             this.renderQuestionChoices(),
             this.renderQuestionAnswers(),
+            this.renderQuestionImg(),
         ]
     }
 
@@ -406,7 +457,7 @@ export default class QuestionInput extends mixins(Lang) {
                         <el-button 
                                 type={ButtonType.PRIMARY}
                                 size={ButtonSize.MEDIUM}
-                                onclick={() => { send.submitTestData(this.questionData) }}
+                                onclick={() => { this.sendmassge() }}
                             >提交</el-button>
                             <el-button 
                                 type={ButtonType.PRIMARY}
