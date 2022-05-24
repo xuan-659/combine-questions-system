@@ -6,11 +6,15 @@ import Signin from '@/components/signin';
 import Main from '@/components/main';
 import ComposeViewer from '@/components/compose-viewer';
 import personalViewer from '@/components/personal-center';
+import Storage from '@/utlis/localStorage';
 import { 
   COMPOSE_VIEWER_BASE_ROUTE,
   PERSONAL_CENTER_BASE_ROUTE
 } from '@/common/constants/route';
 import { component } from 'vue/types/umd';
+import { SESSION_ID_KEY } from '@/common/constants';
+
+const storage = new Storage()
 
 
 Vue.use(VueRouter)
@@ -18,10 +22,13 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/signin',
-    component: Signin
+    component: Signin,
   },
   {
     path: '/compose-viewer',
+    meta: {
+        requireAuth: true
+    },
     redirect: () => {
       const defaultComponent = teacherFunctionList.find(item => item.default);
       return COMPOSE_VIEWER_BASE_ROUTE + defaultComponent?.path
@@ -33,10 +40,16 @@ const routes: Array<RouteConfig> = [
         res = {
           path: item.path,
           component: item.component,
+          meta: {
+            requireAuth: true
+        },
           children: item.children.map((child): RouteConfig => {
             return {
               path: child.path,
-              component: child.component
+              component: child.component,
+              meta: {
+                requireAuth: true
+            },
             }
           }),
         }
@@ -44,6 +57,9 @@ const routes: Array<RouteConfig> = [
         res = {
           path: item.path,
           component: item.component,
+          meta: {
+            requireAuth: true
+        },
         }
       }
       return res;
@@ -52,13 +68,10 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     redirect: '/main',
-    meta: {
-      requireAuth: true
-    }
   },
   {
     path: '/main',
-    component: Main
+    component: Main,
   }
 ]
 
@@ -69,9 +82,16 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(to);
   if(to.meta && to.meta.requireAuth) {
     console.log('需要验证')
-    // TODO: 路由守卫
+    
+    const sessionId = storage.get(SESSION_ID_KEY);
+    
+    
+    if(!sessionId) {
+      router.push('/signin')
+    }
   }
   next();
 })

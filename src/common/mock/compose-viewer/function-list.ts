@@ -46,14 +46,14 @@ export const teacherFunctionList: IFunctionItem[] = [
     //     component: PaperManage
     // },
     {
-        id: 3,
+        id: 2,
         func: QUESTION_INPUT,
         icon: 'icon-huabi',
         path: 'question-input',
         component: QuestionInput
     },
     {
-        id: 4,
+        id: 3,
         func: KNOWLEDGE_MANAGE,
         icon: 'icon-zhishidian',
         path: 'knowledge-manage',
@@ -76,7 +76,7 @@ export const teacherFunctionList: IFunctionItem[] = [
         ]
     },
     {
-        id: 5,
+        id: 4,
         func: ABILITY_MANAGE,
         icon: 'icon-nenglidian',
         path: 'ability-manage',

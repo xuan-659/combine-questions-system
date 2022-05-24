@@ -35,6 +35,7 @@ export const actions: ActionTree<IUserState, IRootState> = {
             courseName:data.courseName
         }
         const res: any = await $http.post('/user/update/info', pramas);
+        
         const sessionId = res.data.data
         $storage.set(SESSION_ID_KEY, sessionId, INFINITY_TIME);
         console.log(res);

@@ -63,7 +63,7 @@ export default class personalViewer extends mixins(Lang) {
     }
 
     public renderMenu() {
-        return personalFunctionList.filter(item => item.roleId.includes(this.userInfo.roleId)).map(functionItem => {
+        return personalFunctionList.filter((item: any) => item.roleId.includes(this.userInfo.roleId)).map(functionItem => {
             return (
                 functionItem.children ?
                 this.renderMenuChildren(functionItem, functionItem.children)

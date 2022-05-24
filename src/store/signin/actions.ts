@@ -27,6 +27,9 @@ const $storage = new Storage();
 const updateRoute:(roleId: (0 | 1)) => Array<RouteConfig> =  function(roleId) {
     return [{
     path: '/personal-center',
+    meta: {
+      requireAuth: true
+    },
     redirect: () => {
       const defaultComponent = personalFunctionList.find(item => item.default);
       return PERSONAL_CENTER_BASE_ROUTE + defaultComponent?.path
@@ -84,12 +87,15 @@ export const actions: ActionTree<ISigninState, IRootState> = {
             identityId: data.teacherId || data.administratorId,
             password: data.aPassword || data.tPassword
         });
-        const { sessionId } = res.data.data;
+        const sessionId = res.data.data;
+        console.log("登录",sessionId);
+        
         $storage.set(SESSION_ID_KEY, sessionId, INFINITY_TIME);
         if(res.status === HTTPCODE.SUCCESS) {
             // TODO: 处理跳转逻辑
             const res:any = await $http.get('/user/info');
             const roleId: any = res.data.data.roleId;
+            router.push('/compose-viewer')
             console.log(roleId);
             router.addRoutes(updateRoute(roleId))
         }
