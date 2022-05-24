@@ -27,6 +27,7 @@ import RegMap from '@/common/regexp';
 import { keyRenderClass } from '@/common/regexp/editor';
 import { CreateElement } from 'vue';
 import { PreviewContentKey } from '@/interfaces';
+import { send } from '@/store/composeViewer/question_input'
 
 const {
     SELECT_COURSE,
@@ -44,17 +45,38 @@ const {
     ADD_SUB_QUESTION
 } = INPUT_MODULE;
 
-@Component({})
+@Component({
+    // async mounted(){
+    //    await send.getCourse().then((res:any)=>{
+    //      list =res.data.data.map((item:any)=>{
+    //         return item.courseName;
+    //     })
+    //     })
+    //     console.log(list)
+    // }
+})
 export default class QuestionInput extends mixins(Lang) {
-
+    async created(){
+        var list:any =0
+         await send.getCourse().then((res:any)=>{
+         this.data.list =res.data.data.map((item:any)=>{
+            return item.courseName;
+        })
+        })
+        console.log(this.data.list)
+    }
     public $refs!: {
         typesetElement: HTMLDivElement
+    }
+    public data:any ={
+        list:[1,2,3,4],
+        file:[],
     }
 
     public questionData: IQuestionItem = {
         questionId: 0,
         questionTypeId: 0,
-        courseId: 0,
+        courseId:  0,
         questionContentChoice: [],
         questionScore: 1,
         questionDifficulty: 1,
@@ -76,9 +98,37 @@ export default class QuestionInput extends mixins(Lang) {
     public subQuestions: string[] = [];
 
     public choices: string[] = createArray(choicesBaseNum);
+    // public  async add_choice(){
+    //     async function add(){
+    //         await send.getCourse().then((res:any)=>{
+    //             list =res.data.data.map((item:any)=>{
+    //                 console.log(item)
+    //               return item.courseName;
+    //           })
+    //           })
+    //     }
+    //     add();
+    //     return list
+    // }
 
     public addChoice() {
         this.choices.push('');
+    }
+    public upload_img(item:any){
+          this.data.file.push(item.file)
+    }
+    public remove_img(file:any,fileList:any){
+        console.log(file.name)
+          this.data.file=this.data.file.filter((item:any)=>{
+              console.log(item.name)
+              return item.name !=file.name
+          })
+        console.log(file)
+        console.log(this.data.file)
+    }
+    public test_aa(){
+        console.log('aaa')
+        console.log(this.data.file)
     }
 
     public addSubQuesContent() {
@@ -99,10 +149,14 @@ export default class QuestionInput extends mixins(Lang) {
         return (
             <el-form-item label={this.t(SELECT_COURSE)}>
                 <el-select v-model={this.questionData.courseId}>
-                    <el-option 
-                                label='计算机通信与网络'
-                                value='计算机通信与网络'>
+                   {
+                        this.data.list.map((item:any) => (
+                            <el-option 
+                                label={item} 
+                                value={item}>
                             </el-option>
+                        ))
+                   }
                 </el-select>
             </el-form-item>
         )
@@ -157,10 +211,19 @@ export default class QuestionInput extends mixins(Lang) {
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item class='question-flex' label={this.t(INPUT_CONTENT_IMG)}>
-                    <el-input
+                    {/* <el-input
                         placeholder={this.t(INPUT_IMG_URL)}
                         v-model={this.questionData.questionContentSupplement}
-                    />
+                    /> */}
+                <el-upload
+                 class="avatar-uploader"
+                 action="#"
+                 http-request={this.upload_img}
+                 before-remove={this.remove_img}
+                >
+                    
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
                 </el-form-item>
                 {
                     isSubjective(type) ?
@@ -338,6 +401,18 @@ export default class QuestionInput extends mixins(Lang) {
                             <div class='preview__questionAnswer-content'></div>
                             {/* 答案补充（图片链接） */}
                             <div class='preview__questionAnswerSupplement-content'></div>
+                        </div>
+                        <div class='preview-input'>
+                        <el-button 
+                                type={ButtonType.PRIMARY}
+                                size={ButtonSize.MEDIUM}
+                                onclick={() => { send.submitTestData(this.questionData) }}
+                            >提交</el-button>
+                            <el-button 
+                                type={ButtonType.PRIMARY}
+                                size={ButtonSize.MEDIUM}
+                                onclick={() => {this.test_aa()}}
+                            >测试</el-button>
                         </div>
                     </div>
                 </div>

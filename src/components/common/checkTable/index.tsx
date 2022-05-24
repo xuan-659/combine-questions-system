@@ -91,9 +91,9 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
      }
  
      @Action('deleteKnowledge')
-     public DeleteKnowledge!: (knowledgeId: number) => Promise<boolean>
+     public DeleteKnowledge!: (knowledgeId: number[]) => Promise<boolean>
      @Action('deleteAbility')
-     public DeleteAbility!: (abilityId: number) => Promise<boolean>
+     public DeleteAbility!: (abilityId: number[]) => Promise<boolean>
  
      @Action('submitAbilityData')
      public submitBathcAbilityData!: (payload: { courseId: number, abilityList: Array<IAbilityItem> }) => Promise<boolean>
@@ -150,81 +150,49 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
         
     }
 
-    public async deleteBatch(){
-        this.rowDataList.map((rowData:any,index)=>{
-            console.log("hhhhhhhhhhh");
-            console.log("rowdata:",rowData);
+  
+//为啥这里.then函数不能在deleteBatch()执行完后在执行呢，先执行alert了
+     public async deleteSelectedRows() {
+       const deleteArray:number[]=[]
+       
+       this.rowDataList.map((rowData:any,index)=>{
             
             if(rowData.isCheck===true)
             {
-                console.log("1");
                 
-                if(this.selectProp==undefined)
-               
-                
-                this.DeleteKnowledge(this.knowledgeList[rowData.id].knowledgeId).then((state)=>{
-                    console.log("2");
-                    console.log("rowid:",rowData.id);
-                    
-                    console.log("id:",this.knowledgeList[rowData.id].knowledgeId);
-                    
-                    console.log(index,state);
-                    
-                })
+                if(this.selectProp==undefined){
+                    console.log(rowData);
+                    deleteArray.push(this.knowledgeList[rowData.id].knowledgeId)
+                }
                 else
-                this.DeleteAbility(this.abilityList[rowData.id].abilityId).then((state)=>{
-                    // console.log(state);
-                    console.log("rowid:",rowData.id);
-                    
-                    console.log("id:",this.abilityList[rowData.id].abilityId);
-                    
-                    console.log(index,state);
-                    
-                })
+                {
+                    deleteArray.push(this.abilityList[rowData.id].abilityId)
+                }
+               
             }
       })
-      var x=1
-         return  x
-    }
-//为啥这里.then函数不能在deleteBatch()执行完后在执行呢，先执行alert了
-     public async deleteSelectedRows() {
-         await this.deleteBatch().then((x:any)=>{
-            //  console.log("x:",x);
-             
-                   alert("删除成功！")
-                //    location.reload();
-         })
-         this.rowDataList = this.rowDataList.filter(rowData => {
-             return rowData.isCheck === false;
-         })
-    //   this.rowDataList.map((rowData:any,index)=>{
-    //           if(rowData.isCheck===true)
-    //           {
-    //               if(this.selectProp==undefined)
-    //               this.DeleteKnowledge(rowData.knowledgeId).then((state)=>{
-                    
-    //                 //   if(state){
-    //                 //        alert("删除成功！")
-    //                 //        location.reload()
-    //                 //   }
-                      
-    //               })
-    //               else
-    //               this.DeleteAbility(rowData.abilityId).then((state)=>{
-                      
-                      
-    //                 //   if(state){
-    //                 //        alert("删除成功！")
-    //                 //        location.reload()
-    //                 //   }
-                      
-    //               })
-    //           }
-    //     })
-    //         alert("删除成功！")
-    //         location.reload();
+      console.log("deletearray:",deleteArray);
       
+     if(this.selectProp==undefined){
+         console.log("dele前：",this.knowledgeList);
+         
+        this.DeleteKnowledge(deleteArray).then((state)=>{
+            alert("删除成功！")
+            location.reload
+            console.log("state:",state);
+
+            
+        })
+     }else{
+         console.log("a",this.abilityList);
+         
+        this.DeleteAbility(deleteArray).then((state)=>{
+            alert("删除成功！")
+            location.reload
+            
+        })
      }
+    }
  
      public handleSelectAll() {
          this.rowDataList.forEach(rowData => {
