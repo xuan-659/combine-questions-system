@@ -9,4 +9,5 @@ export const send : any={
         var res:any = await $http.get('/course/list')
         return res;
     },
+    
 }
