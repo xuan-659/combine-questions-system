@@ -131,14 +131,17 @@ export const actions: ActionTree<IUserState, IRootState> = {
     /** 组卷
      * 
      * @param context 
-     * @param paperInfo  课程信息 
+     * @param paperInfo  试卷信息 
      * @returns 
      */
      async composeTestPaper(context, paperInfo) {
-        const res = await $http.post('/question/compose', paperInfo)
-        console.log(res.data);
-        
+        const res: any = await $http.post('/question/compose', paperInfo)
+        return res.data.paperList
+    },
+
+    async downloadPaper(context, id) {
+        const res = await $http .post('/paper/use', id);
         return res.data
-    }
+    },
 }
 
