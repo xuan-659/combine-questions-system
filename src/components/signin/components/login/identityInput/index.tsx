@@ -49,7 +49,7 @@ export default class IdentityInput extends mixins(Lang, ComponentProp) {
     private autoUpdateUserInfo!: (payload: { userInfo: IBindUserInfo }) => void
 
     @Action('handleUserLogin')
-    private handleUserLogin!: (payload: { data: IBindUserInfo }) => void
+    private handleUserLogin!: (payload: { data: IBindUserInfo }) => any
 
     public $refs!: {
         loginForm: Vue & {
@@ -113,7 +113,11 @@ export default class IdentityInput extends mixins(Lang, ComponentProp) {
 
     public clickLoginButton() {
         if(this.isSelectProtocol) {
-            this.handleUserLogin({ data: this.model })
+            this.handleUserLogin({ data: this.model }).then((res: any) => {
+                if(res) {
+                    this.$message.error(res)
+                }
+            })
         } else {
             this.$message.error(this.t(ERROR_MESSAGE.NOT_SELECT_USER_PROTOCOL));
         }

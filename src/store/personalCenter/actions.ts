@@ -54,7 +54,7 @@ export const actions: ActionTree<IUserState, IRootState> = {
      * 获取所有用户信息
      */
     async getAllUser() {
-        const res = await $http.get('/user/user-manage/find')
+        const res = await $http.get('/user/user-manage/find?str=')
         return res.data
         
     },
