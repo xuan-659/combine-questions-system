@@ -120,7 +120,6 @@ export default class KnowledgeCheck extends mixins(Lang) {
      
     //加载知识点数据表
     public async changeKnowledgeTable(){
-        // this.$forceUpdate()
         await this.getKnowledgeData(this.courseId).then((res:any) => {
     
         //    
