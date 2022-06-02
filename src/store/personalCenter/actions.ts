@@ -35,6 +35,7 @@ export const actions: ActionTree<IUserState, IRootState> = {
             courseName:data.courseName
         }
         const res: any = await $http.post('/user/update/info', pramas);
+        
         const sessionId = res.data.data
         $storage.set(SESSION_ID_KEY, sessionId, INFINITY_TIME);
         console.log(res);
@@ -124,6 +125,23 @@ export const actions: ActionTree<IUserState, IRootState> = {
      async deleteCourse(context, courseInfo) {
         const res = await $http.post('/user/user-manage/update', courseInfo)
         return res.status
-    }
+    },
+
+    // composeTestPaper
+    /** 组卷
+     * 
+     * @param context 
+     * @param paperInfo  试卷信息 
+     * @returns 
+     */
+     async composeTestPaper(context, paperInfo) {
+        const res: any = await $http.post('/question/compose', paperInfo)
+        return res.data.paperList
+    },
+
+    async downloadPaper(context, id) {
+        const res = await $http .post('/paper/use', id);
+        return res.data
+    },
 }
 

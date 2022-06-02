@@ -58,9 +58,11 @@ export enum QuestionTypeMap {
     '填空题',
     '判断题',
     '简答题',
-    '分析题',
+    '综合应用题',
     '计算题',
-    '综合应用题'
+    '分析题',
+    
+    
 }
 
 export enum QuestionNameMap {

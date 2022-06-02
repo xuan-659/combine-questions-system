@@ -7,7 +7,8 @@ import { formData } from './form-data';
 
 const storage = new Storage();
 // const baseURL = 'http://47.114.146.52:8080';
-const baseURL = 'http://127.0.0.1:4523/mock/949932'
+// const baseURL = 'http://127.0.0.1:4523/mock/949932'
+const baseURL = 'http://39.101.197.160:8080/njupt-compose-paper-system'
 
 axios.interceptors.request.use(
     config => {
@@ -16,7 +17,7 @@ axios.interceptors.request.use(
             config.params = {};
         }
         if(sessionId) {
-            config.headers.Authorization = sessionId;
+            config.headers.token = sessionId;
         }
         return config;
     },

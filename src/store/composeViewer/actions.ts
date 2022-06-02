@@ -50,8 +50,8 @@ export const actions: ActionTree<IComposeState, IRootState> = {
         return res.data
         
     },
-    async getAbilityData(){
-        const  res=await $http.get('/ability/listByCourseId')
+    async getAbilityData(context,courseId:number){
+        const  res=await $http.get('/ability/listByCourseId',courseId)
         console.log("abilitydata：",res);
         return res.data
         

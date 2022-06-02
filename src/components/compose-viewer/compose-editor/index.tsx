@@ -18,6 +18,9 @@ import {
     NEXT_STEP,
     FINISH_EDIT
 } from '@/common/constants/lang';
+import ListTransfer from './listTransfer';
+import { Action } from 'vuex-class';
+import { ButtonSize, ButtonType } from '@/common/constants';
 
 @Component({
     components: {
@@ -25,12 +28,61 @@ import {
         KnowledgeEditor,
         CapacityEditor,
         QuestionEditor,
-        EditorSwitch
+        EditorSwitch,
+        ListTransfer
     }
 })
 export default class ComposeEditor extends mixins(Lang) {
 
-    public activeStep: number = 1;
+    public activeStep: number = 0;
+
+    @Action('composeTestPaper')
+    public composeTestPaper!: (data: any) => any
+
+    @Action('downloadPaper')
+    public downloadPaper!: (id: any) => any;
+
+    public composeTestPaperData: any = {
+        courseId: '',
+        paperDifficulty: '',
+        questionTypeList: [],
+        abilityIdList: [],
+        knowledgeIdList:[]
+    }
+
+    public paperList: any = [
+        {
+            gmtCreate:"quis Lorem irure reprehenderit",
+            gmtLastUse:"aliquip",
+            gmtModified:"sint laboris magna Ut",
+            paperCourseId:15,
+            paperDifficulty:72,
+            paperId:93,
+            paperName:"验意解体总验",
+            paperStatus:99,
+            paperUsedTimes:239393957625,
+            questionIdList:null,
+            teacherName:"即干任里总都"
+
+        }
+    ];
+
+    public changeBasicData(data: any) {
+        this.composeTestPaperData.courseId = Number(data.courseId),
+        this.composeTestPaperData.paperDifficulty = Number(data.paperDifficulty)
+    }
+
+    public changeKnowledge(data: any) {
+        this.composeTestPaperData.knowledgeIdList.push(...data)
+    }
+
+    public changeAbility(data: any) {
+        this.composeTestPaperData.abilityIdList.push(...data)
+    }
+
+    public changeQuestionTypeList(data: any) {
+        this.composeTestPaperData.questionTypeList = data
+    }
 
     public readonly stepLength: number = 4;
 
@@ -43,10 +95,14 @@ export default class ComposeEditor extends mixins(Lang) {
         console.log(EditorNameMap[componentName]);
         return h(this.$options.components![componentName], {
             props: {
-                title: EditorNameMap[componentName]
+                title: EditorNameMap[componentName],
+                composeTestPaperData: this.composeTestPaperData
             },
             on: {
-
+                "changeBasicData": this.changeBasicData,
+                "changeKnowledge": this.changeKnowledge,
+                "changeAbility": this.changeAbility,
+                "changeQuestionTypeList": this.changeQuestionTypeList
             }
         })
     }
@@ -59,9 +115,12 @@ export default class ComposeEditor extends mixins(Lang) {
         this.activeStep--;
     }
 
-    public handleFinishEdit() {
-        console.log('完成编辑');
+    public async handleFinishEdit() {
         this.activeStep = this.stepLength;
+        await this.composeTestPaper(this.composeTestPaperData).then((res: any) => {
+            this.paperList.push(...res);
+        })
+        
     }
 
     public renderEditorSwitchComponent(h: CreateElement) {
@@ -79,8 +138,38 @@ export default class ComposeEditor extends mixins(Lang) {
         })
     }
 
+    public async download(id: any) {
+        const {paperFileName, answerFileName} =  await this.downloadPaper(id);
+        console.log(paperFileName, answerFileName);
+        const a1 = document.createElement('a');
+        a1.href =  paperFileName;
+        a1.download = `试卷${id}.docx`;
+        a1.style.display = "none";
+        document.body.appendChild(a1);
+        a1.click(); // 模拟点击了a标签，会触发a标签的href的读取，浏览器就会自动下载了
+        a1.remove(); // 一次性的，用完就删除a标签
+        const a2 = document.createElement('a');
+        a2.href =  paperFileName;
+        a2.download = `答案${id}.docx`;
+        a2.style.display = "none";
+        document.body.appendChild(a2);
+        a2.click(); // 模拟点击了a标签，会触发a标签的href的读取，浏览器就会自动下载了
+        a2.remove(); // 一次性的，用完就删除a标签
+        
+    }
+
     public renderEditResult() {
-        console.log('renderEditResult');
+        return (
+            <div>
+                {this.paperList.map((item: any, index: any) => {
+                return (<el-button
+                    onclick={() =>this.download(item.paperId)}
+                    type={ButtonType.PRIMARY} 
+                >下载试卷{index + 1}</el-button>)
+            })}
+            </div>
+            
+        )
     }
 
     render(h: CreateElement) {

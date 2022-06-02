@@ -3,6 +3,7 @@ import Header from '@/components/common/header';
 
 import './style.scss';
 import { ButtonType } from '@/common/constants';
+import router from '@/router';
 
 @Component({
     components: {
@@ -12,7 +13,7 @@ import { ButtonType } from '@/common/constants';
 export default class Main extends Vue {
 
     enterSystem() {
-        
+        router.push('/signin')
     }
 
     render() {
