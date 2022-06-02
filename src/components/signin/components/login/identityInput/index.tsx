@@ -107,7 +107,7 @@ export default class IdentityInput extends mixins(Lang, ComponentProp) {
      public async isInputValid(): Promise<boolean> {
         const validateRes = await validateInput(this.model, SigninRules, 0);
         console.log(typeof validateRes === 'object');
-        console.log(validateRes);
+        console.log(validateRes); 
         return !(typeof validateRes === 'object');
     }
 
