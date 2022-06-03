@@ -32,7 +32,7 @@ export default class AbilityCheck extends mixins(Lang) {
     courseChanged(newVal: number) {
      //    this.courseId = newVal
      this.changeAbilityTable().then(()=>{
-        this.$forceUpdate()
+        // this.$forceUpdate()
     
     });
      }
@@ -73,7 +73,7 @@ export default class AbilityCheck extends mixins(Lang) {
             type: ColumnTemType.TEXT,
             prop: 'id',
             propInit: 0,
-            name: '序号'
+            name: ''
         },
        
     ]

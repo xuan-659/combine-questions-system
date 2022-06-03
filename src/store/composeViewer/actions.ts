@@ -17,11 +17,11 @@ export const actions: ActionTree<IComposeState, IRootState> = {
 
         const data = knowledgeList.map(knowledgeItem => (
             {
-                courseId: courseId,
+                knowledgeCourseId: courseId,
                 knowledgeContent: knowledgeItem.content,
                 // parentIdCollection: knowledgeItem.chapterList,
                 // childrenIdCollection: knowledgeItem.sectionList,
-                knowledgeLevel: knowledgeItem.importance
+                knowledgeImportance: knowledgeItem.importance
             }
         ))
         const res = await $http.post('/knowledge/save', data)
@@ -34,9 +34,25 @@ export const actions: ActionTree<IComposeState, IRootState> = {
     async submitAbilityData(context, payload: { courseId:number,abilityItem: IAbilityItem }) {
         // 能力点录入
       
-        const res = await $http.post('/ability/save',payload)
-        console.log("id:",payload.abilityItem);
-        console.log("ability:",payload.courseId);
+        const { courseId, abilityItem } = payload;
+
+        const data =
+            {
+                abilityCourseId: courseId,
+                abilityContent: abilityItem.content,
+                // parentIdCollection: knowledgeItem.chapterList,
+                // childrenIdCollection: knowledgeItem.sectionList,
+                abilityImportance:abilityItem.importance,
+                knowledgeVOList:abilityItem.relatedKnowledgeId.map(kId=>(
+                    {
+                        knowledgeId:kId
+                    }
+                ))
+            }
+        console.log("dataaa:",data);
+        
+        const res = await $http.post('/ability/save',data)
+      
         
         console.log("res",res);
         return res.status
@@ -44,27 +60,28 @@ export const actions: ActionTree<IComposeState, IRootState> = {
     },
   
     async getKnowledgeData(context,courseId:number){
+        
        
-        const  res=await $http.get('/knowledge/listByCourseId',courseId)
+        const  res=await $http.get('/knowledge/listByCourseId?courseId='+courseId)
         console.log("knowledgedata：",res);
         return res.data
         
     },
     async getAbilityData(context,courseId:number){
-        const  res=await $http.get('/ability/listByCourseId',courseId)
+        const  res=await $http.get('/ability/listByCourseId?courseId='+courseId)
         console.log("abilitydata：",res);
         return res.data
         
     },
     async deleteKnowledge(context,knowledgeId:number[]){
-        const res = await $http.post('/ability/save',knowledgeId)
+        const res = await $http.post('/knowledge/remove',knowledgeId)
         console.log("knowledgeId",knowledgeId);
         console.log("res",res);
         return res
     },
-    async deleteAbility(context,abilityId:number[]){
-        const res = await $http.post('/ability/save',abilityId)
-        console.log("knowledgeId",abilityId);
+    async deleteAbility(context,Array:number[]){
+        const res = await $http.post('/ability/remove',Array)
+        console.log("knowledgeId",Array);
         console.log("res",res);
         return res
     },

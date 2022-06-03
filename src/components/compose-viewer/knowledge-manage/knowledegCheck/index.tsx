@@ -93,7 +93,7 @@ export default class KnowledgeCheck extends mixins(Lang) {
             type: ColumnTemType.TEXT,
             prop: 'id',
             propInit: 0,
-            name: '序号'
+            name: ''
         },
         
        

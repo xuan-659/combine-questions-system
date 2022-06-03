@@ -8,7 +8,7 @@ import { formData } from './form-data';
 const storage = new Storage();
 // const baseURL = 'http://47.114.146.52:8080';
 // const baseURL = 'http://127.0.0.1:4523/mock/949932'
-const baseURL = 'http://39.101.197.160:8080/njupt-compose-paper-system'
+const baseURL = 'http://39.101.197.160:8081/njupt-compose-paper-system'
 
 axios.interceptors.request.use(
     config => {
@@ -30,13 +30,20 @@ export default class AJAX {
 
     @catchException(true)
     public async get<T>(url: string, data?: any, config?: AxiosRequestConfig) {
+    
         const mergedConfig = { ...config, params: data};
         return await axios.get<T>( baseURL + url, mergedConfig);
     }
 
     @catchException(true)
     public async post<T>(url: string, data: any, config?: AxiosRequestConfig) {
-        const mergedConfig = { ...config, params: formData(data)};
-        return await axios.post<T>( baseURL + url, formData(data), mergedConfig);
+        if(url=='/knowledge/save' || url=='/ability/save'||'/knowledge/remove'||'/ability/remove'){
+            const mergedConfig = { ...config, params: data};
+        return await axios.post<T>( baseURL + url, data, mergedConfig);
+        }
+        else{
+            const mergedConfig = { ...config, params: formData(data)};
+            return await axios.post<T>( baseURL + url, formData(data), mergedConfig);
+        }
     }
 }

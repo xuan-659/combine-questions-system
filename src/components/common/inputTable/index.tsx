@@ -132,6 +132,10 @@ export default class InputTable extends mixins(Lang) {
                 this.submitBathcAbilityData({
                     courseId: this.courseId,
                     abilityList: this.rowDataList
+                }).then(()=>{
+                    // alert("提交成功！")
+                    // location.reload()
+                    
                 })
             }
         }

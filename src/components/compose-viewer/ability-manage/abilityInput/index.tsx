@@ -172,7 +172,14 @@ public async changeKnowledgeTable(){
             abilityItem: this.singleAbilityData
         }).then(()=>{
                  alert("录入成功")
-                 location.reload()
+                 this.singleAbilityData=
+                 {
+                    content: "",
+                importance:1,
+                relatedKnowledgeId:[],
+                // courseId:this.courseId
+                }
+                //  location.reload()
                 //  this.$forceUpdate()
         })
         

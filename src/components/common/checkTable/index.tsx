@@ -24,6 +24,7 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
  export default class CheckTable extends mixins(Lang) {
      @Prop()
      public courseId!: number;
+
      @Prop()
      public rowNum!: number;
      @Prop()
@@ -178,8 +179,7 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
          
         this.DeleteKnowledge(deleteArray).then((state)=>{
             alert("删除成功！")
-            location.reload
-            console.log("state:",state);
+          location.reload();
 
             
         })
@@ -188,8 +188,7 @@ import KnowledgeCheck from '@/components/compose-viewer/knowledge-manage/knowled
          
         this.DeleteAbility(deleteArray).then((state)=>{
             alert("删除成功！")
-            location.reload
-            
+            location.reload();
         })
      }
     }
