@@ -91,13 +91,15 @@ export const actions: ActionTree<ISigninState, IRootState> = {
         console.log("登录",sessionId);
         
         $storage.set(SESSION_ID_KEY, sessionId, INFINITY_TIME);
-        if(res.status === HTTPCODE.SUCCESS) {
+        if(res.data.code === HTTPCODE.SUCCESS) {
             // TODO: 处理跳转逻辑
             const res:any = await $http.get('/user/info');
             const roleId: any = res.data.data.roleId;
             router.push('/compose-viewer')
             console.log(roleId);
             router.addRoutes(updateRoute(roleId))
+        } else if(res.status === HTTPCODE.SUCCESS){
+          return res.data.msg
         }
     },
 

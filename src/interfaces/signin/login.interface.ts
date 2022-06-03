@@ -16,6 +16,7 @@ export interface IUserInfo {
 }
 
 export interface ILoginResponse{
+    msg: any;
     code: number;
     message: string;
     data: ILoginResponseData;
