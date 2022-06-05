@@ -34,7 +34,7 @@ export default class CapacityEditor extends mixins(Lang) {
     }
 
     async created() {
-        await this.getAbilityData({courseId: this.composeTestPaperData.courseId}).then((res: any) => {
+        await this.getAbilityData(this.composeTestPaperData.courseId).then((res: any) => {
             console.log(res);
             this.abilityData.push(...res.data.map((item: any) => {
                 return {

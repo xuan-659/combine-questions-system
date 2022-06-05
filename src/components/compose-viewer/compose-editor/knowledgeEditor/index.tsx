@@ -11,7 +11,7 @@ import { Action } from 'vuex-class';
 export default class KnowledgeEditor extends mixins(Lang) {
 
     @Action('getKnowledgeData')
-    getKnowledgeData!: (courseId:any) => any
+    getKnowledgeData!: (courseId:number) => any
 
     @Emit("changeKnowledge")
     public changeKnowledge() {
@@ -22,7 +22,7 @@ export default class KnowledgeEditor extends mixins(Lang) {
 
     public knowledgeData: any = []
     async created() {
-        await this.getKnowledgeData({courseId: this.composeTestPaperData.courseId}).then((res: any) => {
+        await this.getKnowledgeData( this.composeTestPaperData.courseId).then((res: any) => {
             console.log(res);
             this.knowledgeData.push(...res.data.map((item: any) => {
                 return {

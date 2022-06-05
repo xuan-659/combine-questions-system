@@ -39,7 +39,9 @@ export default class AJAX {
             url == "/knowledge/save" ||
             url == "/ability/save" ||
             url == "/knowledge/remove" ||
-            url == "/ability/remove"
+            url == "/ability/remove" ||
+            url == "/question/compose" ||
+            url == "/paper/use"
         ) {
             const mergedConfig = { ...config, params: data };
             return await axios.post<T>(baseURL + url, data, mergedConfig);
