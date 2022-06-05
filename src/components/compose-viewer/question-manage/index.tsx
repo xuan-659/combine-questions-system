@@ -36,8 +36,19 @@ export default class QuestionManage extends mixins(Lang) {
     async created(){
         var list:any =0
          await send.getCourse().then((res:any)=>{
+            //  for(let i=0;i<res.data.data.length;i++){
+
+            //      var arr ={
+            //         res.data.data
+            //      }
+            //      this.data.list.push()
+            //  }
          this.data.list =res.data.data.map((item:any)=>{
-            return item.courseName;
+             var arr ={
+                courseId:item.courseId,
+                courseName:item.courseName
+             };
+            return arr
         })
         })
     }
@@ -48,12 +59,12 @@ export default class QuestionManage extends mixins(Lang) {
         questionId: 0,
         questionTypeId: 0,
         courseId:  0,
-        questionContentChoice: ['1','2','3','4'],
+        questionContentChoice: [],
         questionScore: 1,
         questionDifficulty: 1,
         knowledgeIdList: [],
         abilityIdList: [],
-        questionContent: '123213213',
+        questionContent: 'none',
         questionSubContent: [],
         questionContentSupplement: '',
         questionAnswer: ['aaaa'],
@@ -67,22 +78,26 @@ export default class QuestionManage extends mixins(Lang) {
     }
     public arrlist:any=[this.questionData,this.questionData]
     public data:any={
-        currentPage:5,
+        currentPage:1,
         pagesize:[1],
         total:100,
         questionTypeId:0,
         list:[],
         show:true,
     }
+    public getlist(arr:any){
+        
+    }
     public getQuetionList(){
         var arr ={
             courseId:this.questionData.courseId,
-            questionTypeId:this.questionData.questionTypeId,
+            questionType:this.data.questionTypeId,
             pageNumber:this.data.currentPage,
-            pageSize:2
+            pageSize:1
         }
         manager.getQuestionlist(arr).then((res:any)=>{
-            this.questionData.questionContentChoice=res.data.data[0].optionList
+            if(res.data.data[0]){
+                  this.questionData.questionContentChoice=res.data.data[0].optionList
             this.questionData.questionContent=res.data.data[0].questionContent
             this.questionData.questionContentSupplement=res.data.data[0].questionPicture
             this.questionData.questionAnswer=res.data.data[0].answer
@@ -92,6 +107,7 @@ export default class QuestionManage extends mixins(Lang) {
                 this.data.show=false
             }else{
                 this.data.show=true
+            }
             }
         })
     }
@@ -148,7 +164,8 @@ export default class QuestionManage extends mixins(Lang) {
         this.prewViewQuestionContent()
         console.log('aaa')
     }
-    public handleCurrentChange(){
+    public handleCurrentChange(val:any){
+        this.data.currentPage=val
         this.getQuetionList()
         this.prewViewQuestionContent()
         console.log('aaa')
@@ -175,8 +192,8 @@ export default class QuestionManage extends mixins(Lang) {
                    {
                         this.data.list.map((item:any) => (
                             <el-option 
-                                label={item} 
-                                value={item}>
+                                label={item.courseName} 
+                                value={item.courseId}>
                             </el-option>
                         ))
                    }

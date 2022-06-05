@@ -60,7 +60,11 @@ export default class QuestionInput extends mixins(Lang) {
         var list:any =0
          await send.getCourse().then((res:any)=>{
          this.data.list =res.data.data.map((item:any)=>{
-            return item.courseName;
+            var arr ={
+                courseId:item.courseId,
+                courseName:item.courseName
+             };
+            return arr
         })
         })
         console.log(this.data.list)
@@ -182,8 +186,8 @@ export default class QuestionInput extends mixins(Lang) {
                    {
                         this.data.list.map((item:any) => (
                             <el-option 
-                                label={item} 
-                                value={item}>
+                                label={item.courseName} 
+                                value={item.courseId}>
                             </el-option>
                         ))
                    }
@@ -459,11 +463,7 @@ export default class QuestionInput extends mixins(Lang) {
                                 size={ButtonSize.MEDIUM}
                                 onclick={() => { this.sendmassge() }}
                             >提交</el-button>
-                            <el-button 
-                                type={ButtonType.PRIMARY}
-                                size={ButtonSize.MEDIUM}
-                                onclick={() => {this.test_aa()}}
-                            >测试</el-button>
+                           
                         </div>
                     </div>
                 </div>

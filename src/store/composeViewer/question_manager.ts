@@ -3,7 +3,7 @@ const $http = new AJAX();
 
 export const manager: any={
     async getQuestionlist(data:any) {
-        const {courseId,questionType,pageNumber,pageSize}=data
+        // const {courseId,questionType,pageNumber,pageSize}=data
         var res:any = await $http.get('/question/list',data)
         return res;
     },
@@ -18,7 +18,7 @@ export const manager: any={
         var arr={
             questionId:data
         }
-        var res:any = await $http.post('/question/start',data)
+        var res:any = await $http.post('/question/start',arr)
     },
     
 }
