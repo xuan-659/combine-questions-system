@@ -76,6 +76,10 @@ export default class QuestionInput extends mixins(Lang) {
         list:[1,2,3,4],
         file:[],
         answerfile:[],
+        questionAbilityId:0,
+        questionCourseId:[],
+        add:[],
+        courseId:{}
     }
 
     public questionData: IQuestionItem = {
@@ -142,26 +146,63 @@ export default class QuestionInput extends mixins(Lang) {
               return item.name !=file.name
           })
     }
+    public changecoid(value:any){
+        // this.data.questionCourseId=value.map((item:any)=>{
+        //     var arr=0
+        //     var lif=false
+        //     this.data.list.map((app:any)=>{
+        //         if(item==app.courseName){
+        //             arr = app.courseId
+        //             lif=true
+        //         }
+        //     })
+        //     if(lif){
+        //         return arr
+        //     }
+        // })
+        this.data.questionCourseId=value
+        console.log(value)
+        console.log(this.data.questionCourseId)
+    }
+    public sortll(){
+         this.data.add=this.data.questionCourseId.map((item:any)=>{
+            var arr=0
+            var lif=false
+            this.data.list.map((app:any)=>{
+                if(item==app.courseName){
+                    arr = app.courseId
+                    lif=true
+                }
+            })
+            if(lif){
+                return arr
+            }
+        })
+        console.log(this.data.add)
+    }
     public test_aa(){
         console.log('aaa')
         console.log(this.data.file)
     }
     public sendmassge(){
+        this.sortll()
         var data ={
             questionDifficulty:this.questionData.questionDifficulty,
             questionType:this.questionData.questionTypeId,
             questionContent:'$'+this.questionData.questionContent+'$',
-            optionListJson:this.questionData.questionContentChoice.map(item=>{
-                return '$'+item+'$'
-            }),
+            optionList: this.questionData.questionContentChoice.map(item=>{
+                return '"$'+item+'$"'
+            }) ,
             questionPictureFile:this.data.file,
             answer:'$'+this.questionData.questionAnswer+'$',
             answerPictureFile:this.data.anwswefile,
-            knowledgeIdListJson:this.questionData.knowledgeIdList,
-            questionAbilityId:this.questionData.abilityIdList,
-            questionCourseId:this.questionData.courseId
+            knowledgeIdList: this.data.add,
+            questionAbilityId:this.data.questionAbilityId,
+            questionCourseId:this.data.courseId,
         }
-        send.submitTestData(data)
+        send.submitTestData(data).then((res:any)=>{
+            alert(res.data.msg)
+        })
     }
 
     public addSubQuesContent() {
@@ -182,7 +223,7 @@ export default class QuestionInput extends mixins(Lang) {
     public renderCourseType() {
         return (
             <el-form-item label={this.t(SELECT_COURSE)}>
-                <el-select v-model={this.questionData.courseId}>
+                <el-select v-model={this.data.courseId}>
                    {
                         this.data.list.map((item:any) => (
                             <el-option 
@@ -192,6 +233,43 @@ export default class QuestionInput extends mixins(Lang) {
                         ))
                    }
                 </el-select>
+            </el-form-item>
+        )
+    }
+    public renderabId() {
+        return (
+            <el-form-item label='能力点'>
+                <el-select v-model={this.data.questionAbilityId}>
+                   {
+                        this.data.list.map((item:any) => (
+                            <el-option 
+                                label={item.courseName} 
+                                value={item.courseId}>
+                            </el-option>
+                        ))
+                   }
+                </el-select>
+            </el-form-item>
+        )
+    }
+
+    public renderCourseId() {
+        return (
+            <el-form-item label='知识点'>
+               <el-checkbox-group v-model={this.data.questionCourseId}
+                on={{
+                    'change':this.changecoid
+                }}
+               >
+                    {
+                        this.data.list.map((item:any) => (
+                            <el-checkbox  
+                            label={item.courseName} 
+                            key={item.courseId}>   
+                            </el-checkbox>
+                        ))
+                    }
+                </el-checkbox-group>
             </el-form-item>
         )
     }
@@ -381,6 +459,8 @@ export default class QuestionInput extends mixins(Lang) {
         return [
             this.renderCourseType(),
             this.renderQuestionType(),
+            this.renderCourseId(),
+            this.renderabId(),
             this.renderQuestionDifficulty(),
             this.renderQuestionScore(),
             this.renderQuestionContent(),
