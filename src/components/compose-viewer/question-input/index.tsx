@@ -190,13 +190,13 @@ export default class QuestionInput extends mixins(Lang) {
             questionDifficulty:this.questionData.questionDifficulty,
             questionType:this.questionData.questionTypeId,
             questionContent:'$'+this.questionData.questionContent+'$',
-            optionListJson:this.questionData.questionContentChoice.map(item=>{
-                return '"$"'+item+'"$"'
-            }),
+            optionListJson: JSON.stringify(this.questionData.questionContentChoice.map(item=>{
+                return '"$'+item+'$"'
+            })) ,
             questionPictureFile:this.data.file,
             answer:'$'+this.questionData.questionAnswer+'$',
             answerPictureFile:this.data.anwswefile,
-            knowledgeIdListJson:this.data.add,
+            knowledgeIdListJson: JSON.stringify(this.data.add),
             questionAbilityId:this.data.questionAbilityId,
             questionCourseId:this.data.courseId,
         }
