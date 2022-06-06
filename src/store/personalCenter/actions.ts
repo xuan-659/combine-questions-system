@@ -140,11 +140,7 @@ export const actions: ActionTree<IUserState, IRootState> = {
     },
 
     async downloadPaper(context, id) {
-        const res = await $http.post('/paper/use', JSON.stringify({paperId: id}), {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const res = await $http.get('/paper/getPaper?paperId='+id)
         return res.data
     },
 }

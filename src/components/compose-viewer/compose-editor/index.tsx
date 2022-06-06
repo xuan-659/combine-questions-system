@@ -57,7 +57,7 @@ export default class ComposeEditor extends mixins(Lang) {
             gmtModified:"sint laboris magna Ut",
             paperCourseId:15,
             paperDifficulty:72,
-            paperId:93,
+            paperId:1,
             paperName:"验意解体总验",
             paperStatus:99,
             paperUsedTimes:239393957625,
@@ -139,8 +139,9 @@ export default class ComposeEditor extends mixins(Lang) {
     }
 
     public async download(id: any) {
-        const {paperFileName, answerFileName} =  await this.downloadPaper(id);
-        console.log(paperFileName, answerFileName);
+        await this.downloadPaper(id).then((res: any) => {            
+            const {paperFileName, answerFileName} =  res.data;
+            console.log(paperFileName, answerFileName);
         const a1 = document.createElement('a');
         a1.href =  paperFileName;
         a1.download = `试卷${id}.docx`;
@@ -155,6 +156,8 @@ export default class ComposeEditor extends mixins(Lang) {
         document.body.appendChild(a2);
         a2.click(); // 模拟点击了a标签，会触发a标签的href的读取，浏览器就会自动下载了
         a2.remove(); // 一次性的，用完就删除a标签
+        })
+        
         
     }
 
