@@ -76,7 +76,8 @@ export default class QuestionInput extends mixins(Lang) {
     answerfile: [],
     questionAbilityId: 0,
     questionCourseId: [],
-    add: [],
+    knowledgeIdList: [],
+    knowledgeContentList:[],
     courseId: {},
     abilityList: [],
     knowledgeList: [],
@@ -145,38 +146,19 @@ export default class QuestionInput extends mixins(Lang) {
       return item.name != file.name;
     });
   }
-  public async changecoid(value: any) {
-    // this.data.questionCourseId=value.map((item:any)=>{
-    //     var arr=0
-    //     var lif=false
-    //     this.data.list.map((app:any)=>{
-    //         if(item==app.courseName){
-    //             arr = app.courseId
-    //             lif=true
-    //         }
-    //     })
-    //     if(lif){
-    //         return arr
-    //     }
-    // })
-    this.data.questionCourseId = value;
-    console.log(value);
-    console.log(this.data.questionCourseId);
-  }
-
   public async changeCourseId(id: number) {
+    this.data.questionCourseId = id;
     this.data.abilityList = await send.getAbilityPoint(id);
     this.data.knowledgeList = await send.getKnowledgePoint(id);
   }
-  public onKnowledgePointSelected() {}
 
   public sortAll() {
-    this.data.add = this.data.questionCourseId.map((item: any) => {
+    this.data.knowledgeIdList = this.data.knowledgeContentList.map((item: any) => {
       var arr = 0;
       var lif = false;
-      this.data.list.map((app: any) => {
-        if (item == app.courseName) {
-          arr = app.courseId;
+      this.data.knowledgeList.map((app: any) => {
+        if (item == app.knowledgeContent) {
+          arr = app.knowledgeId;
           lif = true;
         }
       });
@@ -184,11 +166,6 @@ export default class QuestionInput extends mixins(Lang) {
         return arr;
       }
     });
-    console.log(this.data.add);
-  }
-  public test_aa() {
-    console.log("aaa");
-    console.log(this.data.file);
   }
   public sendmassge() {
     this.sortAll();
@@ -202,7 +179,7 @@ export default class QuestionInput extends mixins(Lang) {
       questionPictureFile: this.data.Q_file,
       answer: "$" + this.questionData.questionAnswer + "$",
       answerPictureFile: this.data.A_file,
-      knowledgeIdList: this.data.add,
+      knowledgeIdList: this.data.knowledgeIdList,
       questionAbilityId: this.data.questionAbilityId,
       questionCourseId: this.data.questionCourseId,
     };
@@ -245,7 +222,7 @@ export default class QuestionInput extends mixins(Lang) {
       </el-form-item>
     );
   }
-  public renderabId() {
+  public renderAbilityId() {
     return (
       <el-form-item label="能力点">
         <el-select v-model={this.data.questionAbilityId}>
@@ -263,10 +240,7 @@ export default class QuestionInput extends mixins(Lang) {
   public renderCourseId() {
     return (
       <el-form-item label="知识点">
-        <el-checkbox-group
-          v-model={this.data.questionCourseId}
-          on={{ change: this.onKnowledgePointSelected }}
-        >
+        <el-checkbox-group v-model={this.data.knowledgeContentList}>
           {this.data.knowledgeList.map((item: any) => (
             <el-checkbox
               label={item.knowledgeContent}
@@ -489,7 +463,7 @@ export default class QuestionInput extends mixins(Lang) {
       this.renderCourseType(),
       this.renderQuestionType(),
       this.renderCourseId(),
-      this.renderabId(),
+      this.renderAbilityId(),
       this.renderQuestionDifficulty(),
       this.renderQuestionScore(),
       this.renderQuestionContent(),

@@ -3,7 +3,6 @@ const $http = new AJAX();
 
 export const send: any = {
   async submitTestData(data: any) {
-    console.log(data);
     const res = await $http.post("/question/save", data);
     return res;
   },
