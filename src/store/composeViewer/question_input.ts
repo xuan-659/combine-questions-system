@@ -10,5 +10,13 @@ export const send : any={
         var res:any = await $http.get('/course/list')
         return res;
     },
-    
+    async getKnowledgePoint(courseId: any) {
+        let {data: { data },} = await $http.get("/knowledge/listByCourseId", {courseId});
+        return data;
+      },
+      async getAbilityPoint(courseId: any) {
+        let {data: { data },} = await $http.get("/ability/listByCourseId", {courseId});
+        console.log(data)
+        return data;
+      },
 }
