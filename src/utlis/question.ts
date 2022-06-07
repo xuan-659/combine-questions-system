@@ -7,7 +7,7 @@ export const getQuestionTypes: () => IQuestionTypeList[] = () => {
         const isValue = parseInt(item, 10) >= 0;
         if(isValue) {
             res.push({
-                id: parseInt(item),
+                id: parseInt(item) + 1,
                 name: QuestionTypeMap[item],
             })
         }

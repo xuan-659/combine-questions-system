@@ -51,20 +51,20 @@ export default class ComposeEditor extends mixins(Lang) {
     }
 
     public paperList: any = [
-        {
-            gmtCreate:"quis Lorem irure reprehenderit",
-            gmtLastUse:"aliquip",
-            gmtModified:"sint laboris magna Ut",
-            paperCourseId:15,
-            paperDifficulty:72,
-            paperId:1,
-            paperName:"验意解体总验",
-            paperStatus:99,
-            paperUsedTimes:239393957625,
-            questionIdList:null,
-            teacherName:"即干任里总都"
+        // {
+        //     gmtCreate:"quis Lorem irure reprehenderit",
+        //     gmtLastUse:"aliquip",
+        //     gmtModified:"sint laboris magna Ut",
+        //     paperCourseId:15,
+        //     paperDifficulty:72,
+        //     paperId:1,
+        //     paperName:"验意解体总验",
+        //     paperStatus:99,
+        //     paperUsedTimes:239393957625,
+        //     questionIdList:null,
+        //     teacherName:"即干任里总都"
 
-        }
+        // }
     ];
 
     public changeBasicData(data: any) {
@@ -118,7 +118,12 @@ export default class ComposeEditor extends mixins(Lang) {
     public async handleFinishEdit() {
         this.activeStep = this.stepLength;
         await this.composeTestPaper(this.composeTestPaperData).then((res: any) => {
-            this.paperList.push(...res);
+            if(res) {
+                this.paperList.push(...res);
+            } else {
+                this.$message.error('组卷失败')
+            }
+            
         })
         
     }
@@ -164,7 +169,7 @@ export default class ComposeEditor extends mixins(Lang) {
     public renderEditResult() {
         return (
             <div>
-                {this.paperList.map((item: any, index: any) => {
+                {this.paperList?.map((item: any, index: any) => {
                 return (<el-button
                     onclick={() =>this.download(item.paperId)}
                     type={ButtonType.PRIMARY} 
