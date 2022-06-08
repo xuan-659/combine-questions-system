@@ -136,11 +136,15 @@ export const actions: ActionTree<IUserState, IRootState> = {
      */
      async composeTestPaper(context, paperInfo) {
         const res: any = await $http.post('/question/compose', paperInfo)
-        return res.data.paperList
+        return res.data.data
     },
 
     async downloadPaper(context, id) {
-        const res = await $http.get('/paper/getPaper?paperId='+id)
+        const res = await $http.post('/paper/use', JSON.stringify({paperId: id}), {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
         return res.data
     },
 }
