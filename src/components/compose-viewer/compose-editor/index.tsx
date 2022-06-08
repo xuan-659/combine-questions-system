@@ -157,20 +157,20 @@ export default class ComposeEditor extends mixins(Lang) {
             const paperFileName = res.paperFileName
             const answerFileName = res.answerFileName
             console.log(paperFileName, answerFileName);
-        // const a1 = document.createElement('a');
-        // a1.href =  paperFileName;
-        // a1.download = `试卷${id}.docx`;
-        // a1.style.display = "none";
-        // document.body.appendChild(a1);
-        // a1.click(); // 模拟点击了a标签，会触发a标签的href的读取，浏览器就会自动下载了
-        // a1.remove(); // 一次性的，用完就删除a标签
-        // const a2 = document.createElement('a');
-        // a2.href =  paperFileName;
-        // a2.download = `答案${id}.docx`;
-        // a2.style.display = "none";
-        // document.body.appendChild(a2);
-        // a2.click(); // 模拟点击了a标签，会触发a标签的href的读取，浏览器就会自动下载了
-        // a2.remove(); // 一次性的，用完就删除a标签
+        const a1 = document.createElement('a');
+        a1.href =  paperFileName;
+        a1.download = `试卷${id}.docx`;
+        a1.style.display = "none";
+        document.body.appendChild(a1);
+        a1.click(); // 模拟点击了a标签，会触发a标签的href的读取，浏览器就会自动下载了
+        a1.remove(); // 一次性的，用完就删除a标签
+        const a2 = document.createElement('a');
+        a2.href =  paperFileName;
+        a2.download = `答案${id}.docx`;
+        a2.style.display = "none";
+        document.body.appendChild(a2);
+        a2.click(); // 模拟点击了a标签，会触发a标签的href的读取，浏览器就会自动下载了
+        a2.remove(); // 一次性的，用完就删除a标签
         })
         
         
